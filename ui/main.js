@@ -1,7 +1,7 @@
-//Counter Code
-var button = document.getElementById('counter');
-
-button.onclick = function () { 
+var nameInput = document.getElementById('name');   
+var name = nameInput.value;
+var submit = document.getElementById('submit_btn');
+submit.onclick = function () { 
   
   //Create a request object
   var request = new XMLHttpRequest();

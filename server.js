@@ -2,7 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var path = require('path');
 var Pool = require('pg').Pool;
-
+var crypto = require('crypto');
 var config = {
     user: 'jms2273916',
     database: 'jms2273916',
@@ -13,41 +13,6 @@ var config = {
 var app = express();
 app.use(morgan('combined'));
 
-
-var articles = { 
-'article-one': {
-    title: 'Article One | Mujahid Sarfraz',
-    heading: 'Article One',
-    date: 'Aug 15, 2017 ',
-    content:  `                     
-        <p>
-            This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article.
-        </p>
-        <p>
-            This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article.
-        </p>
-        <p>
-            This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article. This is the content of my first article.
-        </p>`
-},
-'article-two': { title: 'Article Two | Mujahid Sarfraz',
-    heading: 'Article One',
-    date: 'Aug 15, 2017 ',
-    content:  `                     
-        <p>
-            This is the content of my second article.
-        </p>`
-    
-},
-'article-three': { title: 'Article Three | Mujahid Sarfraz',
-    heading: 'Article One',
-    date: 'Aug 15, 2017 ',
-    content:  `                     
-        <p>
-            This is the content of my third article.
-        </p>`
-    }
-};
 function createTemplate (data) {
     var title = data.title;
     var date = data.date;
@@ -87,6 +52,21 @@ return htmlTemplate;
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'ui', 'index.html'));
+});
+
+
+
+function hash (input, salt) {
+    
+  // How do we create a hash?
+  var hash = crypto.pbkdf2Sync(input, salt, 10000, 512, 'sha512');
+  return hashed.toString('hex');
+}
+
+
+app.get('/hash/:input', function (req, res) {
+   var hashedString = hash(req.params.input, 'this-is-some-random-string'); 
+   res.send(hashedString);
 });
 
 var pool = new Pool(config);
